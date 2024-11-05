@@ -50,14 +50,15 @@ const getPostById = (id, posts) => {
 
     var index = 0
     console.log("Entering getPostById")
-    console.log(posts)
+    //console.log(posts)
     console.log(posts[index])
-    var currentId = posts[index].id;
+    var currentId = posts[index].blog_id;
     
     // iterate through the posts to find the id and then get the information
     while (String(currentId) !== String(id)){
         index++;
-        currentId = posts[index].id;
+        currentId = posts[index].blog_id;
+        console.log('This is the id: ' + id + ' and this is the current ID' + currentId);
     }
 
     const post = posts[index];

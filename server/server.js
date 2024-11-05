@@ -4,6 +4,7 @@
 const { readPosts, addPost, getPostById, savePosts } = require('./utils');
 const {PostsPath} = require('./constants.js')
 const {getUser, insertUser} = require ('./database.js')
+const cors = require('cors');
 
 // server initialization
 var express = require('express');
@@ -14,6 +15,7 @@ const { get } = require('https');
 
 // start app
 var app = express();
+app.use(cors())
 
 // set view engine to ejs
 app.set('view engine', 'ejs')
@@ -39,11 +41,8 @@ app.get('/', async (req,res) => {
 
         console.log(posts)
         console.log(posts.length)
-        res.render('index', { 
-            title: 'Blog Page', 
-            message: 'Welcome to my Blog page!', 
-            posts: posts,
-            category: "All"});
+        
+        res.send(posts)
     } catch (err) {
         console.error('Error:', err);
         res.status(500).send('Error processing the form');
@@ -96,16 +95,14 @@ app.get('/posts', async (req,res) => {
 app.get('/editPost', async (req,res) => {
     // get the post from the query
     const id = req.query.post;
-
+    console.log(id)
     // get post by id
     var {posts} = await readPosts(PostsPath);
     const {post, index} = getPostById(id, posts);
     console.log(post)
 
     // send to an edit post page
-    res.render('./editPost', {
-        post: post
-    })
+    res.send(post)
 })
 
 // submit the edited post
@@ -116,12 +113,14 @@ app.post('/editPost', async (req, res) => {
     // get newly edited post
     const post = req.body
 
+    console.log(req.query)
+
     // get the old post index
-    const {index} = getPostById(post.id, posts);
+    //const {index} = getPostById(post.blog_id, posts);
 
     // replace post
     posts[index] = post;
-    savePosts(posts);
+    //savePosts(posts);
 
     console.log("Submitting edited post");
 
